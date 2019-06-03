@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import axios from "axios";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    users: [],
+    success: false
+  };
+
+  componentDidMount() {
+    axios
+      .get("https://api.jsonbin.io/b/5b97f370db948c68635f6dbc")
+      .then(response => {
+        this.setState({
+          users: response.data.data,
+          success: response.data.success
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <ul>
+          {this.state.users.map((user, index) => {
+            return (
+              <li key={index}>
+                ID: {user.id}, name {user.name}
+              </li>
+            );
+          })}
+        </ul>
+        <span>Success: {this.state.success ? "true" : "false"}</span>
+      </div>
+    );
+  }
 }
 
 export default App;
